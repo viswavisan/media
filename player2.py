@@ -23,6 +23,7 @@ class FFPlayer:
         self.close = False
         self.state = None
         self.frame = None
+        self.zoom=1
         self.l=None
         self.filename = filename
         self.skip_interval=5
@@ -61,7 +62,7 @@ class FFPlayer:
                 h, w, ch = image.shape
                 Image2 = QImage(image.data, w, h, ch * w, QImage.Format_RGB888)
                 self.pixmap=QPixmap.fromImage(Image2)
-                self.pixmap=self.pixmap.scaled(2*w, 2*h, QtCore.Qt.KeepAspectRatio)
+                self.pixmap=self.pixmap.scaled(self.zoom*w, self.zoom*h, QtCore.Qt.KeepAspectRatio)
                 self.l.setPixmap(self.pixmap)
                 self.l.setFixedWidth(self.l.pixmap().width())
                 self.l.setFixedHeight(self.l.pixmap().height())
@@ -75,6 +76,10 @@ class FFPlayer:
     def seek_m(self):
         if int(self.player.get_pts()) - self.skip_interval > 0:
             self.player.seek(-self.skip_interval, relative=True, accurate=False)
+    def zoomin(self):self.zoom+=1
+    def zoomout(self):
+        if self.zoom>1:self.zoom-=1
+
 
 
 
@@ -94,6 +99,7 @@ class ed(QMainWindow):
 
         ToolBar = self.addToolBar("view")
 
+        b=QAction(QtGui.QIcon(stored('open.png')),"file",self);ToolBar.addAction(b);b.triggered.connect(self.select_file)
         b=QAction(QtGui.QIcon(stored('run.png')),"play",self);ToolBar.addAction(b);b.triggered.connect(self.play)
         b=QAction(QtGui.QIcon(stored('stop.png')),"stop",self);ToolBar.addAction(b);b.triggered.connect(self.close)
         b=QAction(QtGui.QIcon(stored('pause.png')),"pause",self);ToolBar.addAction(b);b.triggered.connect(self.pause)
@@ -103,12 +109,21 @@ class ed(QMainWindow):
         b=QAction(QtGui.QIcon(stored('plus.png')),"vol+",self);ToolBar.addAction(b);b.triggered.connect(self.vol_p)
         b=QAction(QtGui.QIcon(stored('minus.png')),"vol-",self);ToolBar.addAction(b);b.triggered.connect(self.vol_m)
 
+        b=QAction(QtGui.QIcon(stored('plus.png')),"zoom+",self);ToolBar.addAction(b);b.triggered.connect(self.zoomin)
+        b=QAction(QtGui.QIcon(stored('minus.png')),"zoom-",self);ToolBar.addAction(b);b.triggered.connect(self.zoomout)
 
-    def play2(self):
+    def select_file(self):
         self.currentfile=QFileDialog.getOpenFileName(self,'Single File','','Video Files (*.mp4 *.avi)')[0]
         if self.currentfile=='':return
         self.player=FFPlayer(self.currentfile)
         self.player.l=self.l
+        self.play()
+        self.pause()
+        self.player.player.toggle_pause()
+    def play2(self):
+        self.player.player.toggle_pause()
+    def zoomin(self):self.player.zoomin()
+    def zoomout(self):self.player.zoomout()
 
     def play(self):
         self.t1=threading.Thread(target=self.play2)

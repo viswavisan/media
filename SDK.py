@@ -11,6 +11,7 @@ from visan_com import *
 import media
 import player2
 import Image_viewer
+import QM_player
 
 
 class SDK(QMainWindow):
@@ -35,6 +36,7 @@ class SDK(QMainWindow):
         self.com()
         self.vplayer()
         self.ImageViewer()
+        self.Qmediaplayer()
     def ImageViewer(self):
         self.imview=Image_viewer.QImageViewer()
         self.stack.addWidget(self.imview)
@@ -110,6 +112,10 @@ class SDK(QMainWindow):
     def vplayer(self):
         self.ffplayer=player2.ed()
         self.stack.addWidget(self.ffplayer)
+    def Qmediaplayer(self):
+        self.qmplayer=QM_player.qmplayer()
+        self.stack.addWidget(self.qmplayer)
+
     def arrange(self,LE):
         try:
             try:C=int(LE.text())
@@ -140,7 +146,7 @@ class SDK(QMainWindow):
                 #['bluetooth.gif',lambda:self.stack.setCurrentWidget(self.bluz),'Bluetooth'],
                 ['com.gif',lambda:self.stack.setCurrentWidget(self.Com),'Serial Monitor'],
                 ['video_player1.gif',lambda:self.stack.setCurrentWidget(self.ffplayer),'FF player'],
-                ['QM_video_player.gif',lambda:self.stack.setCurrentWidget(self.player),'Qmedia player'],
+                ['QM_video_player.gif',lambda:self.stack.setCurrentWidget(self.qmplayer),'Qmedia player'],
                 ['gallery.gif',lambda:self.stack.setCurrentWidget(self.imview),'image viewer']]
         C=5
         r=0;c=0
