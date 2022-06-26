@@ -1,5 +1,6 @@
 from visan_qt import *
 import threading
+#pybluez #install visual studio c++ 14.0
 from bluetooth import *
 
 class bluecontrol(QMainWindow):

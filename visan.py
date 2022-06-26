@@ -17,6 +17,20 @@ import shutil,pandas,csv,random
 import win32com.client as win32
 import getpass;user=getpass.getuser().upper()
 
+class scrollwindow(QScrollArea):
+    def __init__(self,parent=None,layout=None,vs=Qt.ScrollBarPolicy.ScrollBarAlwaysOn,hs=Qt.ScrollBarPolicy.ScrollBarAlwaysOn,size=None,bg=None,w=None):
+        super().__init__()
+        if parent!=None: parent.addWidget(self)
+        self.widget = QWidget();self.setWidget(self.widget)
+        self.layout=layout
+        if self.layout !=None :self.widget.setLayout(self.layout)
+
+        self.setWidgetResizable(True)
+        self.setHorizontalScrollBarPolicy(hs)
+        self.setVerticalScrollBarPolicy(vs)
+        if size!=None:  self.widget.setFixedHeight(size)
+        if w!=None:self.widget.setFixedHeight(size)
+        if bg!=None: self.widget .setStyleSheet("background-color:"+bg)
 
 class QLineNumberArea(QWidget):
     def __init__(self, editor):super().__init__(editor);self.codeEditor = editor

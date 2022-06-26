@@ -6,9 +6,11 @@ from visan_qt import *
 from visan_vtk import *
 from visan_control import *
 from calculator import calc
-from visan_bluz import *
+#from visan_bluz import *
 from visan_com import *
 import media
+import player2
+import Image_viewer
 
 
 class SDK(QMainWindow):
@@ -29,8 +31,13 @@ class SDK(QMainWindow):
         self.Editor()
         self.pyexcel()
         self.q3d()
-        self.bluetooth()
+        #self.bluetooth()
         self.com()
+        self.vplayer()
+        self.ImageViewer()
+    def ImageViewer(self):
+        self.imview=Image_viewer.QImageViewer()
+        self.stack.addWidget(self.imview)
     def com(self):
         self.Com=comcontrol()
         self.stack.addWidget(self.Com)
@@ -67,6 +74,7 @@ class SDK(QMainWindow):
     def camera(self):
         try:
             self.camera=media.image_editor()
+            self.camera.app=app
             self.stack.addWidget(self.camera)
         except Exception as e:print(e)
     def Editor(self):
@@ -99,7 +107,9 @@ class SDK(QMainWindow):
     def q3d(self):
         self.q3d=vtkviewer()
         self.stack.addWidget(self.q3d)
-
+    def vplayer(self):
+        self.ffplayer=player2.ed()
+        self.stack.addWidget(self.ffplayer)
     def arrange(self,LE):
         try:
             try:C=int(LE.text())
@@ -127,8 +137,11 @@ class SDK(QMainWindow):
                 ['screen.gif',lambda:self.stack.setCurrentWidget(self.camera),'Screen-Record'],
                 ['control.gif',lambda:self.stack.setCurrentWidget(self.control),'System-Control'],
                 ['browser.gif',lambda:self.stack.setCurrentWidget(self.browser),'Browser'],
-                ['bluetooth.gif',lambda:self.stack.setCurrentWidget(self.bluz),'Bluetooth'],
-                ['com.gif',lambda:self.stack.setCurrentWidget(self.Com),'Serial Monitor']]
+                #['bluetooth.gif',lambda:self.stack.setCurrentWidget(self.bluz),'Bluetooth'],
+                ['com.gif',lambda:self.stack.setCurrentWidget(self.Com),'Serial Monitor'],
+                ['video_player1.gif',lambda:self.stack.setCurrentWidget(self.ffplayer),'FF player'],
+                ['QM_video_player.gif',lambda:self.stack.setCurrentWidget(self.player),'Qmedia player'],
+                ['gallery.gif',lambda:self.stack.setCurrentWidget(self.imview),'image viewer']]
         C=5
         r=0;c=0
         size=150

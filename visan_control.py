@@ -70,7 +70,7 @@ class controls(QMainWindow):
 
 
     def set_defaults(self):
-        self.s2.setValue(self.ci.get_brightness())
+        #self.s2.setValue(self.ci.get_brightness())
         self.s1.setValue(self.ci.get_volume())
     def set_brightness(self):
         self.ci.set_brightness(self.s2.value())

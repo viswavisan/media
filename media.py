@@ -12,16 +12,20 @@ import numpy as np
 import cv2
 import imutils
 import pickle
+#pip install cmake
 import face_recognition
 import imutils.paths as paths
 
 import pyautogui
+#pip install pipwin
+#pipwin install PyAudio
 import pyaudio
 from win32api import GetSystemMetrics
 
 import people_also_ask
 import pyttsx3
 
+#pip install SpeechRecognition
 import speech_recognition as SRG
 import time
 store = SRG.Recognizer()
@@ -306,6 +310,7 @@ class image_editor(QMainWindow):
 
     def snap2(self):
         try:
+            app=self.app
             self.pixmap = QScreen.grabWindow(app.primaryScreen(), app.desktop().winId())
             self.l.setPixmap(self.pixmap)
             self.l.setFixedWidth(self.pixmap.width())

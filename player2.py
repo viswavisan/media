@@ -12,7 +12,12 @@ from PIL import Image
 import numpy
 import os
 
-class VideoPlayer:
+def stored(x):
+    try:base_path = sys._MEIPASS
+    except Exception:base_path = os.path.abspath(".")
+    return os.path.join(base_path,'stored/'+x).replace('\\','/')
+
+class FFPlayer:
     def __init__(self, filename,volume = 1.0):
         if not os.path.exists(filename):raise FileNotFound(filename)
         self.close = False
@@ -56,6 +61,7 @@ class VideoPlayer:
                 h, w, ch = image.shape
                 Image2 = QImage(image.data, w, h, ch * w, QImage.Format_RGB888)
                 self.pixmap=QPixmap.fromImage(Image2)
+                self.pixmap=self.pixmap.scaled(2*w, 2*h, QtCore.Qt.KeepAspectRatio)
                 self.l.setPixmap(self.pixmap)
                 self.l.setFixedWidth(self.l.pixmap().width())
                 self.l.setFixedHeight(self.l.pixmap().height())
@@ -72,22 +78,36 @@ class VideoPlayer:
 
 
 
-class ed(QWidget):
+class ed(QMainWindow):
     def __init__(self,parent=None):
         super().__init__()
+        frame1=QWidget()
+        self.setCentralWidget(frame1)
         vl=QVBoxLayout()
-        self.setLayout(vl)
-        pb=QPushButton('play');vl.addWidget(pb);pb.clicked.connect(self.play)
-        pb=QPushButton('stop');vl.addWidget(pb);pb.clicked.connect(self.close)
-        pb=QPushButton('pause');vl.addWidget(pb);pb.clicked.connect(self.pause)
-        pb=QPushButton('seek+');vl.addWidget(pb);pb.clicked.connect(self.seek_p)
-        pb=QPushButton('seek-');vl.addWidget(pb);pb.clicked.connect(self.seek_m)
-        pb=QPushButton('mute');vl.addWidget(pb);pb.clicked.connect(self.mute)
-        pb=QPushButton('vol+');vl.addWidget(pb);pb.clicked.connect(self.vol_p)
-        pb=QPushButton('vol-');vl.addWidget(pb);pb.clicked.connect(self.vol_m)
-        self.l=QLabel();vl.addWidget(self.l)
+        frame1.setLayout(vl)
+        self.l=QLabel();vl.addWidget(self.l,alignment=QtCore.Qt.AlignCenter)
+        self.add_toolbar()
+        self.currentfile=r'C:\Users\Kokila\Downloads\media-main\media-main\sample\2.mp4'
+
+
+    def add_toolbar(self):
+
+        ToolBar = self.addToolBar("view")
+
+        b=QAction(QtGui.QIcon(stored('run.png')),"play",self);ToolBar.addAction(b);b.triggered.connect(self.play)
+        b=QAction(QtGui.QIcon(stored('stop.png')),"stop",self);ToolBar.addAction(b);b.triggered.connect(self.close)
+        b=QAction(QtGui.QIcon(stored('pause.png')),"pause",self);ToolBar.addAction(b);b.triggered.connect(self.pause)
+        b=QAction(QtGui.QIcon(stored('forward.png')),"seek+",self);ToolBar.addAction(b);b.triggered.connect(self.seek_p)
+        b=QAction(QtGui.QIcon(stored('backward.png')),"seek-",self);ToolBar.addAction(b);b.triggered.connect(self.seek_m)
+        b=QAction(QtGui.QIcon(stored('mute.png')),"mute",self);ToolBar.addAction(b);b.triggered.connect(self.mute)
+        b=QAction(QtGui.QIcon(stored('plus.png')),"vol+",self);ToolBar.addAction(b);b.triggered.connect(self.vol_p)
+        b=QAction(QtGui.QIcon(stored('minus.png')),"vol-",self);ToolBar.addAction(b);b.triggered.connect(self.vol_m)
+
+
     def play2(self):
-        self.player=VideoPlayer('D:/2.mp4')
+        self.currentfile=QFileDialog.getOpenFileName(self,'Single File','','Video Files (*.mp4 *.avi)')[0]
+        if self.currentfile=='':return
+        self.player=FFPlayer(self.currentfile)
         self.player.l=self.l
 
     def play(self):
